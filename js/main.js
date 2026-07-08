@@ -7,6 +7,7 @@ const money = (n) =>
 
 const FREE_SHIPPING_THRESHOLD = 699;
 const SHIPPING_FEE = 59;
+const PUBLISHER_NAME = "Marginalia Press";
 
 /* ---------- Header: mobile nav toggle + search ---------- */
 function initHeader() {
@@ -45,27 +46,47 @@ function bookCoverInner(book) {
   return `
     ${book.tag ? `<span class="book-tag">${book.tag}</span>` : ""}
     <span class="cover-icon">${genreIconSVG(book.icon)}</span>
+    <span class="cover-watermark">${genreIconSVG(book.icon)}</span>
     <p class="cover-author">${book.author}</p>
     <div class="rule"></div>
     <h3>${book.title}</h3>
   `;
 }
 
+/* Pricing: bestsellers and new arrivals show a struck-through MRP + % off,
+   matching the "flat 50% off" promo banner without discounting everything. */
+function priceInfo(book) {
+  const hasDiscount = book.tag === "Bestseller" || book.tag === "New";
+  if (!hasDiscount) return { mrp: null, discountPct: 0 };
+  const mrp = Math.round((book.price * 1.18) / 10) * 10;
+  const discountPct = Math.round((1 - book.price / mrp) * 100);
+  return { mrp, discountPct };
+}
+
+function priceRowHTML(book) {
+  const { mrp, discountPct } = priceInfo(book);
+  if (!mrp) return `<span class="price">${money(book.price)}</span>`;
+  return `
+    <span class="price">${money(book.price)}</span>
+    <span class="mrp">${money(mrp)}</span>
+    <span class="discount-pill">${t("percent_off", { d: discountPct })}</span>
+  `;
+}
+
 function renderBookCard(book) {
   return `
     <article class="book-card">
-      <div class="book-cover spine-${book.spine}" onclick="openModal(${book.id})" role="button" tabindex="0"
-           onkeydown="if(event.key==='Enter')openModal(${book.id})">
+      <a class="book-cover spine-${book.spine}" href="book.html?id=${book.id}" aria-label="${book.title}">
         ${bookCoverInner(book)}
-      </div>
+      </a>
       <div class="book-info">
         <span class="genre-label">${genreLabel(book.genre)}</span>
-        <a href="#" class="title-link" onclick="openModal(${book.id});return false;">${book.title}</a>
+        <a href="book.html?id=${book.id}" class="title-link">${book.title}</a>
         <span class="author">by ${book.author}</span>
         <span class="rating">★ ${book.rating.toFixed(1)}</span>
         <div class="price-row">
-          <span class="price">${money(book.price)}</span>
-          <button class="add-btn" title="${t("modal_add_to_cart")}" aria-label="${t("modal_add_to_cart")}: ${book.title}"
+          <span class="price-group">${priceRowHTML(book)}</span>
+          <button class="add-btn" title="${t("add_to_cart_btn")}" aria-label="${t("add_to_cart_btn")}: ${book.title}"
                   onclick="addToCart(${book.id});flashAdded(this)">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
               <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
@@ -88,10 +109,9 @@ function flashAdded(btn) {
 function renderShelfSpine(book) {
   const sizeClass = book.id % 3 === 0 ? "tall" : book.id % 3 === 1 ? "" : "short";
   return `
-    <div class="spine ${sizeClass} spine-${book.spine}" onclick="openModal(${book.id})" role="button" tabindex="0"
-         onkeydown="if(event.key==='Enter')openModal(${book.id})" title="${book.title}">
+    <a class="spine ${sizeClass} spine-${book.spine}" href="book.html?id=${book.id}" title="${book.title}">
       <span>${book.title}</span>
-    </div>
+    </a>
   `;
 }
 
@@ -189,67 +209,151 @@ function renderShop() {
   }
 }
 
-/* ---------- Book detail modal ---------- */
-function openModal(id) {
-  const book = BOOKS.find(b => b.id === id);
-  if (!book) return;
-  const backdrop = document.querySelector("[data-modal-backdrop]");
-  const content = document.querySelector("[data-modal-content]");
-  content.innerHTML = `
-    <div class="modal-cover spine-${book.spine}">
-      ${bookCoverInner(book)}
-    </div>
-    <div class="modal-body">
-      <span class="genre-label">${genreLabel(book.genre)}</span>
-      <h2>${book.title}</h2>
-      <p class="muted">by ${book.author}</p>
-      <div class="modal-meta">
-        <span>★ ${book.rating.toFixed(1)}</span>
-        <span>${book.pages} ${t("pages_suffix")}</span>
-        ${book.tag ? `<span>${book.tag}</span>` : ""}
-      </div>
-      <p>${book.blurb}</p>
-      <p class="price" style="font-size:1.4rem">${money(book.price)}</p>
-      <div class="modal-actions">
-        <div class="qty-control">
-          <button type="button" onclick="stepModalQty(-1)" aria-label="Decrease quantity">−</button>
-          <input type="text" inputmode="numeric" value="1" data-modal-qty readonly>
-          <button type="button" onclick="stepModalQty(1)" aria-label="Increase quantity">+</button>
-        </div>
-        <button class="btn btn-primary" onclick="addModalToCart(${book.id})">${t("modal_add_to_cart")}</button>
-      </div>
-    </div>
-  `;
-  backdrop.classList.add("is-open");
-  document.body.style.overflow = "hidden";
+/* ---------- Book detail page ---------- */
+function reviewCount(book) {
+  return 32 + ((book.id * 47) % 300);
 }
 
-function stepModalQty(delta) {
-  const input = document.querySelector("[data-modal-qty]");
+function fakeIsbn(book) {
+  const block = String(8000 + book.id * 37).slice(0, 4);
+  return `978-93-${block}-${String(10 + book.id).padStart(2, "0")}-${book.id % 10}`;
+}
+
+function publishYear(book) {
+  return 2022 + (book.id % 4);
+}
+
+function relatedBooks(book) {
+  let list = BOOKS.filter(b => b.genre === book.genre && b.id !== book.id);
+  if (list.length < 4) {
+    const extra = BOOKS.filter(b => b.id !== book.id && !list.includes(b) && b.tag === "Bestseller");
+    list = list.concat(extra);
+  }
+  return list.slice(0, 4);
+}
+
+function renderBookDetail() {
+  const params = new URLSearchParams(window.location.search);
+  const id = Number(params.get("id"));
+  const book = BOOKS.find(b => b.id === id);
+  const wrap = document.querySelector("[data-book-detail]");
+  if (!book || !wrap) {
+    window.location.href = "shop.html";
+    return;
+  }
+
+  document.title = `${book.title} — Marginalia`;
+
+  const crumb = document.querySelector("[data-breadcrumb]");
+  if (crumb) {
+    crumb.innerHTML = `
+      <a href="index.html" data-i18n="breadcrumb_home">Home</a>
+      <span>/</span>
+      <a href="shop.html" data-i18n="nav_shop">Shop</a>
+      <span>/</span>
+      <a href="shop.html?genre=${encodeURIComponent(book.genre)}">${genreLabel(book.genre)}</a>
+      <span>/</span>
+      <span class="current">${book.title}</span>
+    `;
+    crumb.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = t(el.getAttribute("data-i18n")); });
+  }
+
+  wrap.innerHTML = `
+    <div class="pd-cover-col">
+      <div class="book-cover pd-cover spine-${book.spine}">
+        ${bookCoverInner(book)}
+      </div>
+    </div>
+    <div class="pd-info-col">
+      <span class="genre-label">${genreLabel(book.genre)}</span>
+      <h1>${book.title}</h1>
+      <p class="pd-author">by ${book.author}</p>
+      <div class="pd-rating-row">
+        <span class="rating">★ ${book.rating.toFixed(1)}</span>
+        <span class="muted">(${t("reviews_suffix", { n: reviewCount(book) })})</span>
+      </div>
+      <div class="pd-price-row">${priceRowHTML(book)}</div>
+      <p class="pd-blurb">${book.blurb}</p>
+
+      <div class="pd-buy-row">
+        <div class="qty-control">
+          <button type="button" onclick="stepPdQty(-1)" aria-label="Decrease quantity">−</button>
+          <input type="text" inputmode="numeric" value="1" data-pd-qty readonly>
+          <button type="button" onclick="stepPdQty(1)" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="btn btn-primary" onclick="pdAddToCart(${book.id})">${t("add_to_cart_btn")}</button>
+        <button class="btn btn-gold" onclick="pdBuyNow(${book.id})">${t("buy_now_btn")}</button>
+      </div>
+
+      <div class="delivery-box">
+        <h3>${t("delivery_heading")}</h3>
+        <div class="delivery-input-row">
+          <input type="text" inputmode="numeric" maxlength="6" data-pincode-input placeholder="${t("delivery_placeholder")}">
+          <button type="button" class="btn btn-outline" onclick="checkDelivery()">${t("delivery_check_btn")}</button>
+        </div>
+        <p class="delivery-result" data-delivery-result></p>
+        <ul class="trust-list">
+          <li>${t("free_delivery_note")}</li>
+          <li>${t("dispatch_note")}</li>
+          <li>${t("return_policy_note")}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pd-details-col">
+      <h2>${t("about_heading")}</h2>
+      <p>${book.blurb}</p>
+      <h2>${t("details_heading")}</h2>
+      <table class="spec-table">
+        <tr><th>${t("publisher_label")}</th><td>${PUBLISHER_NAME}</td></tr>
+        <tr><th>${t("language_label")}</th><td>English</td></tr>
+        <tr><th>${t("pages_suffix")}</th><td>${book.pages}</td></tr>
+        <tr><th>${t("isbn_label")}</th><td>${fakeIsbn(book)}</td></tr>
+        <tr><th>${t("published_label")}</th><td>${publishYear(book)}</td></tr>
+      </table>
+    </div>
+  `;
+
+  const related = document.querySelector("[data-related]");
+  if (related) related.innerHTML = relatedBooks(book).map(renderBookCard).join("");
+
+  initScrollReveal();
+}
+
+function stepPdQty(delta) {
+  const input = document.querySelector("[data-pd-qty]");
   const next = Math.max(1, Number(input.value) + delta);
   input.value = next;
 }
 
-function addModalToCart(id) {
-  const qty = Number(document.querySelector("[data-modal-qty]").value) || 1;
+function pdAddToCart(id) {
+  const qty = Number(document.querySelector("[data-pd-qty]").value) || 1;
   addToCart(id, qty);
-  closeModal();
+  const btn = document.querySelector(".pd-buy-row .btn-primary");
+  if (btn) flashAdded(btn);
 }
 
-function closeModal() {
-  document.querySelector("[data-modal-backdrop]")?.classList.remove("is-open");
-  document.body.style.overflow = "";
+function pdBuyNow(id) {
+  const qty = Number(document.querySelector("[data-pd-qty]").value) || 1;
+  addToCart(id, qty);
+  window.location.href = "checkout.html";
 }
 
-function initModal() {
-  const backdrop = document.querySelector("[data-modal-backdrop]");
-  if (!backdrop) return;
-  backdrop.addEventListener("click", (e) => {
-    if (e.target === backdrop) closeModal();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal();
-  });
+function checkDelivery() {
+  const input = document.querySelector("[data-pincode-input]");
+  const result = document.querySelector("[data-delivery-result]");
+  const pin = input.value.trim();
+  if (!/^\d{6}$/.test(pin)) {
+    result.textContent = t("delivery_invalid");
+    result.classList.add("is-error");
+    return;
+  }
+  result.classList.remove("is-error");
+  const from = new Date();
+  from.setDate(from.getDate() + 3);
+  const to = new Date();
+  to.setDate(to.getDate() + 6);
+  const fmt = (d) => d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  result.textContent = t("delivery_result", { date: `${fmt(from)} – ${fmt(to)}`, pincode: pin });
 }
 
 /* ---------- Cart page ---------- */
@@ -271,9 +375,9 @@ function renderCartPage() {
 
   container.innerHTML = lines.map(({ book, qty, lineTotal }) => `
     <div class="cart-line">
-      <div class="mini-spine spine-${book.spine}">${book.title}</div>
+      <a class="mini-spine spine-${book.spine}" href="book.html?id=${book.id}">${book.title}</a>
       <div>
-        <p class="line-title">${book.title}</p>
+        <a class="line-title" href="book.html?id=${book.id}">${book.title}</a>
         <p class="line-author">by ${book.author}</p>
         <button class="remove-link" onclick="removeFromCart(${book.id});renderCartPage();">${t("remove_label")}</button>
       </div>
@@ -345,7 +449,7 @@ function initCheckoutForm() {
 
 /* ---------- Scroll reveal ---------- */
 function initScrollReveal() {
-  const targets = document.querySelectorAll(".reveal");
+  const targets = document.querySelectorAll(".reveal:not(.is-visible)");
   if (!targets.length) return;
 
   if (!("IntersectionObserver" in window)) {
@@ -368,11 +472,11 @@ function initScrollReveal() {
 /* ---------- Boot ---------- */
 document.addEventListener("DOMContentLoaded", () => {
   initHeader();
-  initModal();
 
   const page = document.body.dataset.page;
   if (page === "home") renderHome();
   if (page === "shop") initShop();
+  if (page === "book") renderBookDetail();
   if (page === "cart") renderCartPage();
   if (page === "checkout") { renderCheckoutSummary(); initCheckoutForm(); }
 
