@@ -7,6 +7,21 @@ CSS and JavaScript, so it's easy to read, edit, and host for free on
 
 ## What's new in this version
 
+- **Fixed a real bug**: clicking a book used to open a popup with most of
+  the space blank. The cause was a CSS grid that only had one box to put
+  content in, so the layout collapsed into a narrow strip and left the rest
+  empty. Rather than patch the popup, it's replaced with something better
+  (see next point).
+- **Every book now has its own full page** (`book.html?id=…`), the way
+  Amazon or Flipkart product pages work — instead of a small popup. It has
+  a large cover, price with delivery estimate, a PIN code delivery
+  checker, trust badges (free delivery / dispatch time / returns), full
+  book details (publisher, language, pages, ISBN, year), and a "You might
+  also like" row of related titles. Clicking any book cover or title
+  anywhere on the site takes you there.
+- **Discount pricing** — Bestseller and New titles now show a struck-through
+  original price and a "% off" badge, on both the cards and the product
+  page, echoing the "50% off" banner instead of just being decorative text.
 - **Redesigned hero** with a two-column layout, an illustrated "open book"
   graphic, and soft entrance animations.
 - **A scrolling promo bar** ("New arrivals", "50% off", "Free shipping")
@@ -16,17 +31,18 @@ CSS and JavaScript, so it's easy to read, edit, and host for free on
   shop filter for children's picture books.
 - **Language switcher** in the header — English, हिंदी (Hindi) and
   മലയാളം (Malayalam). It translates all the site's own text (navigation,
-  buttons, headings, forms). Book titles/authors/descriptions stay in
-  English, the same way most multi-language stores keep product copy in
-  one language to start.
+  buttons, headings, forms, the new product page). Book titles/authors/
+  descriptions stay in English, the same way most multi-language stores
+  keep product copy in one language to start.
 - **All prices in ₹**, formatted the Indian way (`₹1,299`), with free
   shipping over ₹699.
 - Hover/scroll animations: cards lift and catch a light "shine" on hover,
   sections fade up into view as you scroll, add-to-cart has a little
   confirmation animation.
-- Book covers are illustrated in CSS (colored "spines" with a genre icon
-  and a glossy highlight) rather than photos. See **"About the book
-  images"** below for why, and how to swap in real cover photos later.
+- Book covers are illustrated in CSS (colored "spines" with a genre icon,
+  a large watermark icon, and a glossy highlight) rather than photos. See
+  **"About the book images"** below for why, and how to swap in real cover
+  photos later.
 
 ## What's inside
 
@@ -34,6 +50,7 @@ CSS and JavaScript, so it's easy to read, edit, and host for free on
 marginalia/
 ├── index.html        Home page (hero + shelf + Kids' Corner + featured books)
 ├── shop.html          Full catalog with search, filters, sorting
+├── book.html            Product detail page (?id=…) — cover, price, delivery, related books
 ├── cart.html           Shopping cart
 ├── checkout.html   Checkout form + order confirmation
 ├── css/
@@ -42,7 +59,7 @@ marginalia/
 │   ├── data.js            The list of books — edit this to add/remove books
 │   ├── cart.js             Shopping cart logic (saved in the browser)
 │   ├── i18n.js               Language switcher text + logic
-│   └── main.js            Page behaviour (search, filters, modal, forms)
+│   └── main.js            Page behaviour (search, filters, product page, forms)
 └── README.md
 ```
 
@@ -103,8 +120,8 @@ Go to [github.com](https://github.com) and sign up if you haven't already.
 ### C. Upload your code
 On the empty repository page, click **uploading an existing file**, then:
 1. Drag in all the files and folders from this `marginalia` folder
-   (`index.html`, `shop.html`, `cart.html`, `checkout.html`, the `css`
-   folder, the `js` folder, and `README.md`).
+   (`index.html`, `shop.html`, `book.html`, `cart.html`, `checkout.html`,
+   the `css` folder, the `js` folder, and `README.md`).
 2. Scroll down, click **Commit changes**.
 
 *(If you later install [GitHub Desktop](https://desktop.github.com) or use
