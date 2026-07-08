@@ -4,25 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop all books — Marginalia</title>
-<meta name="description" content="Browse the full Marginalia catalog: fiction, mystery, sci-fi, fantasy, romance, nonfiction and children's books.">
+<meta name="description" content="Browse the full Marginalia catalog: fiction, mystery, sci-fi, fantasy, romance, nonfiction and children's books. Prices in ₹.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="shop">
 
+<div class="marquee-bar" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-group">
+      <span data-i18n="marquee_1">✦ New arrivals just landed</span>
+      <span data-i18n="marquee_2">✦ Flat 50% off on select titles this week</span>
+      <span data-i18n="marquee_3">✦ Free shipping over ₹699</span>
+      <span data-i18n="marquee_4">✦ Kids' Corner is now open</span>
+    </div>
+    <div class="marquee-group">
+      <span data-i18n="marquee_1">✦ New arrivals just landed</span>
+      <span data-i18n="marquee_2">✦ Flat 50% off on select titles this week</span>
+      <span data-i18n="marquee_3">✦ Free shipping over ₹699</span>
+      <span data-i18n="marquee_4">✦ Kids' Corner is now open</span>
+    </div>
+  </div>
+</div>
+
 <header class="site-header">
   <div class="wrap">
     <a href="index.html" class="logo">Margin<span>alia</span></a>
 
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="shop.html" class="is-active">Shop</a>
-      <a href="shop.html?genre=Fiction">Fiction</a>
-      <a href="shop.html?genre=Fantasy">Fantasy</a>
-      <a href="shop.html?genre=Nonfiction">Nonfiction</a>
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="shop.html" class="is-active" data-i18n="nav_shop">Shop</a>
+      <a href="shop.html?genre=Children" data-i18n="nav_kids">Kids' Corner</a>
+      <a href="shop.html?genre=Fiction" data-i18n="nav_fiction">Fiction</a>
+      <a href="shop.html?genre=Fantasy" data-i18n="nav_fantasy">Fantasy</a>
       <form class="search-form" data-search-form>
-        <input type="search" placeholder="Search books or authors" aria-label="Search books">
+        <input type="search" data-i18n-placeholder="search_placeholder" placeholder="Search books or authors" aria-label="Search books">
         <button type="submit" aria-label="Search">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
         </button>
@@ -30,6 +47,13 @@
     </nav>
 
     <div class="header-actions">
+      <div class="lang-select">
+        <select data-lang-select aria-label="Language">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="ml">മലയാളം</option>
+        </select>
+      </div>
       <a href="cart.html" class="cart-link">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
         <span class="cart-badge is-hidden" data-cart-badge>0</span>
@@ -44,8 +68,8 @@
 <main>
   <section class="section" style="padding-bottom:0">
     <div class="wrap">
-      <span class="eyebrow">The full catalog</span>
-      <h1 style="font-size:clamp(1.9rem,3.5vw,2.6rem)">Shop all books</h1>
+      <span class="eyebrow" data-i18n="eyebrow_catalog">The full catalog</span>
+      <h1 style="font-size:clamp(1.9rem,3.5vw,2.6rem)" data-i18n="page_title_shop">Shop all books</h1>
     </div>
   </section>
 
@@ -54,15 +78,15 @@
       <div class="shop-toolbar">
         <div class="filter-chips" data-genre-chips></div>
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-          <input type="search" data-shop-search placeholder="Search this page…" aria-label="Filter books"
+          <input type="search" data-shop-search data-i18n-placeholder="search_this_page" placeholder="Search this page…" aria-label="Filter books"
                  style="padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:var(--paper-white);font-size:0.85rem;min-width:180px">
           <div class="sort-select">
             <select data-sort aria-label="Sort books">
-              <option value="featured">Featured</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="rating">Highest rated</option>
-              <option value="title">Title A–Z</option>
+              <option value="featured" data-i18n="sort_featured">Featured</option>
+              <option value="price-asc" data-i18n="sort_price_asc">Price: low to high</option>
+              <option value="price-desc" data-i18n="sort_price_desc">Price: high to low</option>
+              <option value="rating" data-i18n="sort_rating">Highest rated</option>
+              <option value="title" data-i18n="sort_title">Title A–Z</option>
             </select>
           </div>
         </div>
@@ -78,28 +102,28 @@
     <div class="footer-grid">
       <div>
         <p class="footer-logo">Marginalia</p>
-        <p>A small online bookshop for people who dog-ear their favorite pages.</p>
+        <p data-i18n="footer_tagline">A small online bookshop for people who dog-ear their favorite pages.</p>
       </div>
       <div>
-        <h4>Shop</h4>
-        <a href="shop.html?genre=Fiction">Fiction</a>
-        <a href="shop.html?genre=Mystery">Mystery</a>
-        <a href="shop.html?genre=Fantasy">Fantasy</a>
-        <a href="shop.html?genre=Children">Children's</a>
+        <h4 data-i18n="footer_shop_heading">Shop</h4>
+        <a href="shop.html?genre=Fiction" data-i18n="cat_fiction_title">Fiction</a>
+        <a href="shop.html?genre=Mystery" data-i18n="cat_mystery_title">Mystery</a>
+        <a href="shop.html?genre=Fantasy" data-i18n="cat_fantasy_title">Fantasy</a>
+        <a href="shop.html?genre=Children" data-i18n="footer_kids_link">Kids' Corner</a>
       </div>
       <div>
-        <h4>Help</h4>
-        <a href="cart.html">Your cart</a>
-        <a href="shop.html">All books</a>
+        <h4 data-i18n="footer_help_heading">Help</h4>
+        <a href="cart.html" data-i18n="footer_link_cart">Your cart</a>
+        <a href="shop.html" data-i18n="footer_link_all">All books</a>
       </div>
       <div>
-        <h4>Newsletter</h4>
-        <p style="font-size:0.85rem">One email a month, new arrivals only. No spam, ever.</p>
+        <h4 data-i18n="footer_newsletter_heading">Newsletter</h4>
+        <p style="font-size:0.85rem" data-i18n="footer_newsletter_desc">One email a month, new arrivals only. No spam, ever.</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Marginalia Books. All rights reserved.</span>
-      <span>Built with care, one page at a time.</span>
+      <span data-i18n="footer_rights">© 2026 Marginalia Books. All rights reserved.</span>
+      <span data-i18n="footer_credit">Built with care, one page at a time.</span>
     </div>
   </div>
 </footer>
@@ -115,6 +139,7 @@
 
 <script src="js/data.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

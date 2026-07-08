@@ -10,14 +10,38 @@
 </head>
 <body data-page="checkout">
 
+<div class="marquee-bar" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-group">
+      <span data-i18n="marquee_1">✦ New arrivals just landed</span>
+      <span data-i18n="marquee_2">✦ Flat 50% off on select titles this week</span>
+      <span data-i18n="marquee_3">✦ Free shipping over ₹699</span>
+      <span data-i18n="marquee_4">✦ Kids' Corner is now open</span>
+    </div>
+    <div class="marquee-group">
+      <span data-i18n="marquee_1">✦ New arrivals just landed</span>
+      <span data-i18n="marquee_2">✦ Flat 50% off on select titles this week</span>
+      <span data-i18n="marquee_3">✦ Free shipping over ₹699</span>
+      <span data-i18n="marquee_4">✦ Kids' Corner is now open</span>
+    </div>
+  </div>
+</div>
+
 <header class="site-header">
   <div class="wrap">
     <a href="index.html" class="logo">Margin<span>alia</span></a>
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="shop.html" data-i18n="nav_shop">Shop</a>
     </nav>
     <div class="header-actions">
+      <div class="lang-select">
+        <select data-lang-select aria-label="Language">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="ml">മലയാളം</option>
+        </select>
+      </div>
       <a href="cart.html" class="cart-link">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L4 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
         <span class="cart-badge is-hidden" data-cart-badge>0</span>
@@ -29,87 +53,92 @@
 <main>
   <section class="section">
     <div class="wrap">
-      <span class="eyebrow">Step 2 of 2</span>
-      <h1 style="font-size:clamp(1.9rem,3.5vw,2.6rem);margin-bottom:32px">Checkout</h1>
+      <span class="eyebrow" data-i18n="step_2">Step 2 of 2</span>
+      <h1 style="font-size:clamp(1.9rem,3.5vw,2.6rem);margin-bottom:32px" data-i18n="page_title_checkout">Checkout</h1>
 
       <div class="checkout-layout" data-checkout-form-wrap>
         <form data-checkout-form novalidate>
           <fieldset>
-            <legend>Contact</legend>
+            <legend data-i18n="legend_contact">Contact</legend>
             <div class="field">
-              <label for="email">Email address</label>
+              <label for="email" data-i18n="label_email">Email address</label>
               <input type="email" id="email" name="email" required placeholder="you@example.com">
             </div>
           </fieldset>
 
           <fieldset>
-            <legend>Shipping address</legend>
+            <legend data-i18n="legend_shipping">Shipping address</legend>
             <div class="field-row">
               <div class="field">
-                <label for="fname">First name</label>
+                <label for="fname" data-i18n="label_first_name">First name</label>
                 <input type="text" id="fname" name="fname" required>
               </div>
               <div class="field">
-                <label for="lname">Last name</label>
+                <label for="lname" data-i18n="label_last_name">Last name</label>
                 <input type="text" id="lname" name="lname" required>
               </div>
             </div>
             <div class="field">
-              <label for="address">Street address</label>
+              <label for="address" data-i18n="label_address">Street address</label>
               <input type="text" id="address" name="address" required placeholder="123 Reader's Lane">
             </div>
             <div class="field-row">
               <div class="field">
-                <label for="city">City</label>
+                <label for="city" data-i18n="label_city">City</label>
                 <input type="text" id="city" name="city" required>
               </div>
               <div class="field">
-                <label for="zip">Postal code</label>
-                <input type="text" id="zip" name="zip" required>
+                <label for="zip" data-i18n="label_zip">PIN code</label>
+                <input type="text" id="zip" name="zip" required inputmode="numeric">
               </div>
             </div>
             <div class="field">
-              <label for="country">Country</label>
-              <select id="country" name="country" required>
-                <option value="">Select a country</option>
-                <option>United States</option>
-                <option>India</option>
-                <option>United Kingdom</option>
-                <option>Canada</option>
-                <option>Australia</option>
+              <label for="state" data-i18n="label_state">State</label>
+              <select id="state" name="state" required>
+                <option value="" data-i18n="select_state_placeholder">Select a state</option>
+                <option>Andhra Pradesh</option>
+                <option>Delhi</option>
+                <option>Gujarat</option>
+                <option>Karnataka</option>
+                <option>Kerala</option>
+                <option>Maharashtra</option>
+                <option>Tamil Nadu</option>
+                <option>Telangana</option>
+                <option>Uttar Pradesh</option>
+                <option>West Bengal</option>
                 <option>Other</option>
               </select>
             </div>
           </fieldset>
 
           <fieldset>
-            <legend>Payment</legend>
-            <p class="muted" style="font-size:0.85rem;margin-bottom:14px">This demo store doesn't process real payments yet. Filling in the fields below and placing the order will simulate a completed purchase.</p>
+            <legend data-i18n="legend_payment">Payment</legend>
+            <p class="muted" style="font-size:0.85rem;margin-bottom:14px" data-i18n="payment_note">This demo store doesn't process real payments yet. Filling in the fields below and placing the order will simulate a completed purchase.</p>
             <div class="field">
-              <label for="card">Card number</label>
+              <label for="card" data-i18n="label_card">Card number</label>
               <input type="text" id="card" name="card" required placeholder="4242 4242 4242 4242" inputmode="numeric">
             </div>
             <div class="field-row">
               <div class="field">
-                <label for="expiry">Expiry</label>
+                <label for="expiry" data-i18n="label_expiry">Expiry</label>
                 <input type="text" id="expiry" name="expiry" required placeholder="MM/YY">
               </div>
               <div class="field">
-                <label for="cvc">CVC</label>
+                <label for="cvc" data-i18n="label_cvc">CVC</label>
                 <input type="text" id="cvc" name="cvc" required placeholder="123" inputmode="numeric">
               </div>
             </div>
           </fieldset>
 
-          <button type="submit" class="btn btn-primary btn-block">Place order</button>
+          <button type="submit" class="btn btn-primary btn-block" data-i18n="place_order_btn">Place order</button>
         </form>
 
         <aside class="summary-card">
-          <h3 style="margin-bottom:14px">Order summary</h3>
+          <h3 style="margin-bottom:14px" data-i18n="summary_heading">Order summary</h3>
           <div data-checkout-items></div>
-          <div class="summary-row total" style="margin-top:14px"><span>Subtotal</span><span data-subtotal>$0.00</span></div>
-          <div class="summary-row"><span>Shipping</span><span data-shipping>Free</span></div>
-          <div class="summary-row total"><span>Total</span><span data-total>$0.00</span></div>
+          <div class="summary-row total" style="margin-top:14px"><span data-i18n="subtotal_label">Subtotal</span><span data-subtotal>₹0</span></div>
+          <div class="summary-row"><span data-i18n="shipping_label">Shipping</span><span data-shipping data-i18n="free_label">Free</span></div>
+          <div class="summary-row total"><span data-i18n="total_label">Total</span><span data-total>₹0</span></div>
         </aside>
       </div>
 
@@ -117,9 +146,9 @@
         <div class="confirm-icon">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <h2>Thank you — your order is confirmed</h2>
-        <p class="muted">Order number <strong data-order-number></strong>. A confirmation would normally be sent to your email.</p>
-        <a href="shop.html" class="btn btn-primary" style="margin-top:18px">Keep browsing</a>
+        <h2 data-i18n="confirm_heading">Thank you — your order is confirmed</h2>
+        <p class="muted" data-confirm-note data-i18n="confirm_note">Order number {orderNumber}. A confirmation would normally be sent to your email.</p>
+        <a href="shop.html" class="btn btn-primary" style="margin-top:18px" data-i18n="keep_browsing">Keep browsing</a>
       </div>
     </div>
   </section>
@@ -128,14 +157,15 @@
 <footer class="site-footer">
   <div class="wrap">
     <div class="footer-bottom">
-      <span>© 2026 Marginalia Books. All rights reserved.</span>
-      <span>Built with care, one page at a time.</span>
+      <span data-i18n="footer_rights">© 2026 Marginalia Books. All rights reserved.</span>
+      <span data-i18n="footer_credit">Built with care, one page at a time.</span>
     </div>
   </div>
 </footer>
 
 <script src="js/data.js"></script>
 <script src="js/cart.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

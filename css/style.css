@@ -735,3 +735,179 @@ legend { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 14
   .hero-copy h1 { font-size: 2rem; }
   .section { padding: 44px 0; }
 }
+
+/* ============================================================
+   14. Marquee promo bar (infinite loop)
+   ============================================================ */
+.marquee-bar {
+  background: var(--gold);
+  color: var(--ink);
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 26s linear infinite;
+}
+.marquee-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 48px;
+  padding: 9px 24px;
+  flex-shrink: 0;
+}
+.marquee-group span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.marquee-bar:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-group:nth-child(2) { display: none; }
+}
+
+/* ============================================================
+   15. Language switcher
+   ============================================================ */
+.lang-select select {
+  padding: 8px 30px 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper-white);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+/* ============================================================
+   16. Hero v2 (two-column, art panel, entrance animation)
+   ============================================================ */
+.hero {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(185, 138, 61, 0.14), transparent 55%),
+    radial-gradient(circle at 92% 6%, rgba(47, 74, 60, 0.10), transparent 45%);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 40px;
+  align-items: center;
+}
+.hero-copy { max-width: 100%; margin-bottom: 0; animation: fadeUp 0.7s ease both; }
+.hero-cta { animation: fadeUp 0.7s ease 0.12s both; }
+.hero-art { position: relative; animation: fadeUp 0.8s ease 0.1s both; }
+.hero-art svg { width: 100%; height: auto; display: block; }
+.float-slow { animation: floatY 5.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.float-fast { animation: floatY 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.float-slower { animation: floatY 7s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   17. Scroll reveal
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   18. Book cover polish: shine + icon badge
+   ============================================================ */
+.book-cover, .modal-cover { position: relative; overflow: hidden; }
+.book-cover::before, .modal-cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.22), transparent 45%);
+  pointer-events: none;
+}
+.book-cover::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 35%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.book-card:hover .book-cover::after { animation: shineSweep 0.85s ease forwards; }
+@keyframes shineSweep {
+  0% { left: -60%; opacity: 0; }
+  12% { opacity: 0.9; }
+  100% { left: 130%; opacity: 0; }
+}
+.cover-icon {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.20);
+  display: grid;
+  place-items: center;
+  color: var(--paper-white);
+  z-index: 1;
+}
+.book-tag, .cover-icon { z-index: 2; }
+.add-btn.is-added { background: #3c7a52; }
+
+/* ============================================================
+   19. Kids' Corner
+   ============================================================ */
+.kids-section {
+  position: relative;
+  background: linear-gradient(180deg, #fff6e0, #ffe9bf);
+  border-radius: 28px;
+  padding: 54px 30px;
+  overflow: hidden;
+}
+.kids-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(185,138,61,0.18) 1.6px, transparent 1.6px);
+  background-size: 22px 22px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.kids-decor {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+.kids-decor.k1 { width: 90px; height: 90px; background: var(--gold-light); top: -20px; right: 8%; animation: floatY 6s ease-in-out infinite; }
+.kids-decor.k2 { width: 50px; height: 50px; background: var(--forest); opacity: 0.14; bottom: 10%; left: 4%; animation: floatY 4.5s ease-in-out infinite; }
+.kids-decor.k3 { width: 34px; height: 34px; background: var(--spine-oxblood); opacity: 0.14; bottom: 20%; right: 18%; animation: floatY 5s ease-in-out infinite; }
+.kids-section .section-head,
+.kids-section .book-grid { position: relative; z-index: 1; }
+.kids-section .eyebrow { color: var(--spine-oxblood); }
+
+/* ============================================================
+   20. Responsive additions
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-art { order: -1; max-width: 320px; margin: 0 auto 12px; }
+}
+@media (max-width: 760px) {
+  .kids-section { padding: 40px 18px; border-radius: 20px; }
+}
